@@ -24,7 +24,7 @@ const usage = function() {
     delete:   used to delete event
     start:    used to start event
     add:      used to add race time
-    getTime:  used to get all race times
+    getTimes:  used to get all race times
     help:     used to print the usage guide
   `
 
