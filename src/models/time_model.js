@@ -1,14 +1,14 @@
 const sql = require("./db.js");
 
 // constructor
-const Race = function(race) {
-    this.competitor = race.competitor;
-    this.age = race.age;
-    this.time = race.time;
+const Time = function(time) {
+    this.competitor = time.competitor;
+    this.age = time.age;
+    this.time = time.time;
 };
 
 //Add event to events table and create own table for event
-Race.start = (raceName, result) => {
+Time.start = (raceName, result) => {
     sql.query("CREATE TABLE " + raceName + " (id int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT, competitor varchar(255) NOT NULL, age int(11) NOT NULL, time varchar(255) NOT NULL)",
                 (err, res) => {
     if (err) {
@@ -24,7 +24,7 @@ Race.start = (raceName, result) => {
 };
 
 //Add new time to a table
-Race.addTime = (newRace, raceName, result) => {
+Time.addTime = (newRace, raceName, result) => {
     sql.query("INSERT INTO " + raceName + " SET ?", newRace, (err, res) => {
       if (err) {
         console.log("error: ", err);
@@ -39,7 +39,7 @@ Race.addTime = (newRace, raceName, result) => {
 };
 
 //Return whole table
-Race.getAll = (raceName, result) => {
+Time.getAll = (raceName, result) => {
   sql.query("SELECT * FROM " + raceName, (err, res) => {
     if (err) {
       console.log("error: ", err);
@@ -54,7 +54,7 @@ Race.getAll = (raceName, result) => {
 
 
 //Find all times of one competitor
-Race.getOne = (raceName, competitor, result) => {
+Time.getOne = (raceName, competitor, result) => {
   sql.query("SELECT * FROM " + raceName + " WHERE competitor = ?", competitor, (err, res) => {
     if (err) {
       console.log("error: ", err);
@@ -73,4 +73,4 @@ Race.getOne = (raceName, competitor, result) => {
   });
 };
 
-module.exports = Race;
+module.exports = Time;

@@ -14,8 +14,7 @@ app.get("/", (req, res) => {
   res.json({ message: "Welcome to PWP application." });
 });
 
-require("./routes/event_routes.js")(app);
-require("./routes/race_routes.js")(app);
+require("./routes/routes.js")(app);
 
 // set port, listen for requests
 app.listen(3000, () => {

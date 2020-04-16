@@ -1,4 +1,4 @@
-const Race = require("../models/race_model.js");
+const Time = require("../models/time_model.js");
 const Event = require("../models/event_model.js");
 
 // Find a single Event with a eventId
@@ -17,7 +17,7 @@ exports.start = (req, res) => {
         }
       }
 
-      Race.start(data.name.replace(/\'/g,''), (err, data) => {
+      Time.start(data.name.replace(/\'/g,''), (err, data) => {
         if (err)
               res.status(500).send({
                 message:
@@ -60,7 +60,7 @@ exports.addTime = (req, res) => {
       }
 
     // Save time
-    Race.addTime(race, data.name.replace(/\'/g,''), (err, data) => {
+    Time.addTime(race, data.name.replace(/\'/g,''), (err, data) => {
       if (err)
         res.status(500).send({
           message:
@@ -87,7 +87,7 @@ exports.getTimes = (req, res) => {
         }
       }
 
-    Race.getAll(data.name.replace(/\'/g,''), (err, data) => {
+    Time.getAll(data.name.replace(/\'/g,''), (err, data) => {
       if (err)
         res.status(500).send({
           message:
@@ -113,7 +113,7 @@ exports.getTime = (req, res) => {
         }
       }
 
-      Race.getOne(data.name.replace(/\'/g,''), req.params.competitor, (err, data) => {
+      Time.getOne(data.name.replace(/\'/g,''), req.params.competitor, (err, data) => {
         if (err) {
             if (err.kind === "not_found") {
               res.status(404).send({

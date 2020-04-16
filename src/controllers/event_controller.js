@@ -9,12 +9,11 @@ exports.create = (req, res) => {
       });
     }
 
-    // Create a Customer
+    // Create a event
     const event = new Event({
       name: req.body.name,
       address: req.body.address,
-      date: req.body.date,
-      active: req.body.active
+      date: req.body.date
     });
 
     // Save event in the database
@@ -58,7 +57,7 @@ exports.findOne = (req, res) => {
     });
 };
 
-// Find a single Event with a eventId
+// Find a single Event with a eventName
 exports.findOneName = (req, res) => {
     Event.findByName(req.params.eventName, (err, data) => {
       if (err) {

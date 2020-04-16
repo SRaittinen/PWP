@@ -5,7 +5,6 @@ const Event = function(event) {
   this.name = event.name;
   this.address = event.address;
   this.date = event.date;
-  this.active = event.active;
 };
 
 //Add event to events table and create own table for event
@@ -76,7 +75,7 @@ Event.getAll = result => {
 
 Event.updateById = (id, event, result) => {
   sql.query(
-    "UPDATE events SET name = ?, address = ?, date = ?, active = ? WHERE id = ?",
+    "UPDATE events SET name = ?, address = ?, date = ? WHERE id = ?",
     [event.name, event.address, event.date, event.active, id],
     (err, res) => {
       if (err) {
