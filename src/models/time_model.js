@@ -2,15 +2,14 @@ const sql = require("./db.js");
 
 // constructor
 const Time = function(time) {
-    this.competitor = time.competitor;
-    this.age = time.age;
     this.time = time.time;
+    this.eventName = time.eventName;
+    this.competitorName = time.competitorName;
 };
 
 //Add event to events table and create own table for event
-Time.start = (raceName, result) => {
-    sql.query("CREATE TABLE " + raceName + " (id int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT, competitor varchar(255) NOT NULL, age int(11) NOT NULL, time varchar(255) NOT NULL)",
-                (err, res) => {
+Time.create = (newTime, result) => {
+  sql.query("INSERT INTO times SET ?", newTime, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
@@ -18,44 +17,13 @@ Time.start = (raceName, result) => {
     }
 
 
-    console.log("created table: " + raceName);
-    result(null, raceName);
-    });
-};
-
-//Add new time to a table
-Time.addTime = (newRace, raceName, result) => {
-    sql.query("INSERT INTO " + raceName + " SET ?", newRace, (err, res) => {
-      if (err) {
-        console.log("error: ", err);
-        result(err, null);
-        return;
-      }
-
-
-      console.log("created event: ", { id: res.insertId, ...newRace });
-      result(null, { id: res.insertId, ...newRace });
-    });
-};
-
-//Return whole table
-Time.getAll = (raceName, result) => {
-  sql.query("SELECT * FROM " + raceName, (err, res) => {
-    if (err) {
-      console.log("error: ", err);
-      result(null, err);
-      return;
-    }
-
-    console.log("events: ", res);
-    result(null, res);
+    console.log("created time: ", { id: res.insertId, ...newTime });
+    result(null, { id: res.insertId, ...newTime });
   });
 };
 
-
-//Find all times of one competitor
-Time.getOne = (raceName, competitor, result) => {
-  sql.query("SELECT * FROM " + raceName + " WHERE competitor = ?", competitor, (err, res) => {
+Time.getTimes = (eventName, result) => {
+  sql.query(`SELECT * FROM times WHERE eventName = ?`, eventName, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
@@ -63,13 +31,121 @@ Time.getOne = (raceName, competitor, result) => {
     }
 
     if (res.length) {
-      console.log("found event: ", res[0]);
-      result(null, res[0]);
+      console.log("found times: ", res);
+      result(null, res);
       return;
     }
 
     // not found event with the id
     result({ kind: "not_found" }, null);
+  });
+};
+
+Time.getAll = result => {
+  sql.query("SELECT * FROM times", (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    }
+
+    console.log("times: ", res);
+    result(null, res);
+  });
+};
+
+
+Time.getBelow = (eventName, limit, result) => {
+  sql.query(`SELECT * FROM times WHERE eventName = ? AND time <= ? ORDER BY time DESC`,
+      [eventName, limit], (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+
+    if (res.length) {
+      console.log("found times: ", res);
+      result(null, res);
+      return;
+    }
+
+    // not found event with the id
+    result({ kind: "not_found" }, null);
+  });
+};
+
+
+Time.getTop = (eventName, amount, result) => {
+    sql.query(`SELECT * FROM times WHERE eventName = ? ORDER BY time ASC limit ?`,
+      [eventName, amount], (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+
+    if (res.length) {
+      console.log("found times: ", res);
+      result(null, res);
+      return;
+    }
+
+    // not found event with the id
+    result({ kind: "not_found" }, null);
+    });
+};
+
+Time.getCompetitorEventTimes = (eventName, competitorName, result) => {
+  sql.query(`SELECT * FROM times WHERE eventName = ? AND competitorName = ?`,
+            [eventName, competitorName], (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+
+    if (res.length) {
+      console.log("found times: ", res);
+      result(null, res);
+      return;
+    }
+
+    // not found event with the id
+    result({ kind: "not_found" }, null);
+  });
+};
+
+Time.getCompetitorTimes = (competitorName, result) => {
+  sql.query(`SELECT * FROM times WHERE competitorName = ?`,
+            competitorName, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+
+    if (res.length) {
+      console.log("found times: ", res);
+      result(null, res);
+      return;
+    }
+
+    // not found time with the id
+    result({ kind: "not_found" }, null);
+  });
+};
+
+Time.removeAll = result => {
+  sql.query("DELETE FROM times", (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    }
+
+    console.log(`deleted ${res.affectedRows} times`);
+    result(null, res);
   });
 };
 

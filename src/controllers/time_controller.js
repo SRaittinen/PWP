@@ -1,36 +1,6 @@
 const Time = require("../models/time_model.js");
-const Event = require("../models/event_model.js");
 
-// Find a single Event with a eventId
-exports.start = (req, res) => {
-    //Get race data
-    Event.findByName(req.params.eventName, (err, data) => {
-      if (err) {
-        if (err.kind === "not_found") {
-          res.status(404).send({
-            message: `Not found Event with name ${req.params.eventName}.`
-          });
-        } else {
-          res.status(500).send({
-            message: "Error retrieving Event with name " + req.params.eventName
-          });
-        }
-      }
-
-      Time.start(data.name.replace(/\'/g,''), (err, data) => {
-        if (err)
-              res.status(500).send({
-                message:
-                  err.message || "Some error occurred while creating the event."
-              });
-        else res.send(data);
-      });
-    });
-
-};
-
-
-// Create and Save a new race time
+// Create and Save a new competitor
 exports.addTime = (req, res) => {
     // Validate request
     if (!req.body) {
@@ -39,28 +9,15 @@ exports.addTime = (req, res) => {
       });
     }
 
-    // Create a Customer
-    const race = new Race({
-      competitor: req.body.competitor,
-      age: req.body.age,
-      time: req.body.time
+    // Create a competitor
+    const time = new Time({
+        time: req.body.time,
+        eventName: req.body.eventName,
+        competitorName: req.body.competitorName
     });
 
-    Event.findByName(req.params.eventName, (err, data) => {
-      if (err) {
-        if (err.kind === "not_found") {
-          res.status(404).send({
-            message: `Not found Event with name ${req.params.eventName}.`
-          });
-        } else {
-          res.status(500).send({
-            message: "Error retrieving Event with name " + req.params.eventName
-          });
-        }
-      }
-
-    // Save time
-    Time.addTime(race, data.name.replace(/\'/g,''), (err, data) => {
+    // Save event in the database
+    Time.create(time, (err, data) => {
       if (err)
         res.status(500).send({
           message:
@@ -68,13 +25,12 @@ exports.addTime = (req, res) => {
         });
       else res.send(data);
     });
-    });
 };
 
 
-// Retrieve all info from the database.
+//Get all times of specific event
 exports.getTimes = (req, res) => {
-    Event.findByName(req.params.eventName, (err, data) => {
+    Time.getTimes(req.params.eventName, (err, data) => {
       if (err) {
         if (err.kind === "not_found") {
           res.status(404).send({
@@ -85,9 +41,13 @@ exports.getTimes = (req, res) => {
             message: "Error retrieving Event with name " + req.params.eventName
           });
         }
-      }
+      } else res.send(data);
+    });
+};
 
-    Time.getAll(data.name.replace(/\'/g,''), (err, data) => {
+// Retrieve all times from the database.
+exports.getAll = (req, res) => {
+    Time.getAll((err, data) => {
       if (err)
         res.status(500).send({
           message:
@@ -95,12 +55,13 @@ exports.getTimes = (req, res) => {
         });
       else res.send(data);
     });
-    });
 };
 
-// Find a single Event with a eventId
-exports.getTime = (req, res) => {
-    Event.findByName(req.params.eventName, (err, data) => {
+
+
+//Get times below given value
+exports.getBelow = (req, res) => {
+    Time.getBelow(String(req.params.eventName), parseInt(req.params.limit), (err, data) => {
       if (err) {
         if (err.kind === "not_found") {
           res.status(404).send({
@@ -111,22 +72,72 @@ exports.getTime = (req, res) => {
             message: "Error retrieving Event with name " + req.params.eventName
           });
         }
-      }
+      } else res.send(data);
+    });
+};
 
-      Time.getOne(data.name.replace(/\'/g,''), req.params.competitor, (err, data) => {
-        if (err) {
-            if (err.kind === "not_found") {
-              res.status(404).send({
-                message: `Not found competitor with name ${req.params.competitor}.`
-              });
+//Get top three times
+exports.getTop = (req, res) => {
+    Time.getTop(String(req.params.eventName), parseInt(req.params.amount), (err, data) => {
+      if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message: `Not found Event with name ${req.params.eventName}.`
+          });
         } else {
           res.status(500).send({
-            message:
-              err.message || "Some error occurred while retrieving competitor."
+            message: "Error retrieving Event with name " + req.params.eventName
           });
         }
-      }
-      else res.send(data);
+      } else res.send(data);
     });
+};
+
+// Get times for certain competitor on certain event
+exports.getCompetitorEventTimes = (req, res) => {
+    Time.getCompetitorEventTimes(String(req.params.eventName),
+                                String(req.params.competitorName), (err, data) => {
+      if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message:
+            `Not found Event/competitor with names ${req.params.eventName} and ${req.params.competitorName}.`
+          });
+        } else {
+          res.status(500).send({
+            message: "Error retrieving Event/competitor with name "
+                        + req.params.eventName + "/" + req.params.competitorName
+          });
+        }
+      } else res.send(data);
+    });
+};
+
+// Get all times for certain competitor on all events
+exports.getCompetitorTimes = (req, res) => {
+    Time.getCompetitorTimes(req.params.competitorName, (err, data) => {
+      if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message: `Not found competitor with name ${req.params.competitorName}.`
+          });
+        } else {
+          res.status(500).send({
+            message: "Error retrieving Event/competitor with name " + req.params.competitorName
+          });
+        }
+      } else res.send(data);
+    });
+};
+
+// Delete all times from the database.
+exports.deleteAll = (req, res) => {
+    Time.removeAll((err, data) => {
+      if (err)
+        res.status(500).send({
+          message:
+            err.message || "Some error occurred while removing all times."
+        });
+      else res.send({ message: `All times were deleted successfully!` });
     });
 };

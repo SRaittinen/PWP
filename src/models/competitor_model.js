@@ -6,7 +6,7 @@ const Competitor = function(competitor) {
   this.age = competitor.age;
 };
 
-//Add event to events table and create own table for event
+//Add competitor to competitors table
 Competitor.create = (newCompetitor, result) => {
   sql.query("INSERT INTO competitors SET ?", newCompetitor, (err, res) => {
     if (err) {
@@ -21,24 +21,24 @@ Competitor.create = (newCompetitor, result) => {
   });
 };
 
-Competitor.findById = (competitorId, result) => {
-  sql.query(`SELECT * FROM competitors WHERE id = ${competitorId}`, (err, res) => {
-    if (err) {
-      console.log("error: ", err);
-      result(err, null);
-      return;
-    }
-
-    if (res.length) {
-      console.log("found event: ", res[0]);
-      result(null, res[0]);
-      return;
-    }
-
-    // not found competitor with the id
-    result({ kind: "not_found" }, null);
-  });
-};
+// Competitor.findById = (competitorId, result) => {
+//   sql.query(`SELECT * FROM competitors WHERE competitorId = ${competitorId}`, (err, res) => {
+//     if (err) {
+//       console.log("error: ", err);
+//       result(err, null);
+//       return;
+//     }
+//
+//     if (res.length) {
+//       console.log("found event: ", res[0]);
+//       result(null, res[0]);
+//       return;
+//     }
+//
+//     // not found competitor with the id
+//     result({ kind: "not_found" }, null);
+//   });
+// };
 
 Competitor.findByName = (competitorName, result) => {
   sql.query(`SELECT * FROM competitors WHERE name = ?`, competitorName, (err, res) => {
@@ -72,10 +72,9 @@ Competitor.getAll = result => {
   });
 };
 
-Competitor.updateById = (id, competitor, result) => {
-  sql.query(
-    "UPDATE events SET name = ?, age = ? WHERE id = ?",
-    [competitor.name, competitor.age, id],
+Competitor.updateById = (name, competitor, result) => {
+  sql.query("UPDATE competitors SET name = ?, age = ? WHERE name = ?",
+    [competitor.name, competitor.age, name],
     (err, res) => {
       if (err) {
         console.log("error: ", err);
@@ -89,14 +88,14 @@ Competitor.updateById = (id, competitor, result) => {
         return;
       }
 
-      console.log("updated competitor: ", { id: id, ...competitor });
-      result(null, { id: id, ...competitor });
+      console.log("updated competitor: ", { name: name, ...competitor });
+      result(null, { name: name, ...competitor });
     }
   );
 };
 
-Competitor.remove = (id, result) => {
-  sql.query("DELETE FROM competitors WHERE id = ?", id, (err, res) => {
+Competitor.remove = (name, result) => {
+  sql.query("DELETE FROM competitors WHERE name = ?", name, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(null, err);
@@ -109,7 +108,7 @@ Competitor.remove = (id, result) => {
       return;
     }
 
-    console.log("deleted competitors with id: ", id);
+    console.log("deleted competitors with name: ", name);
     result(null, res);
   });
 };

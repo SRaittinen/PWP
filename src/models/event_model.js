@@ -22,24 +22,24 @@ Event.create = (newEvent, result) => {
   });
 };
 
-Event.findById = (eventId, result) => {
-  sql.query(`SELECT * FROM events WHERE id = ${eventId}`, (err, res) => {
-    if (err) {
-      console.log("error: ", err);
-      result(err, null);
-      return;
-    }
-
-    if (res.length) {
-      console.log("found event: ", res[0]);
-      result(null, res[0]);
-      return;
-    }
-
-    // not found event with the id
-    result({ kind: "not_found" }, null);
-  });
-};
+// Event.findById = (eventId, result) => {
+//   sql.query(`SELECT * FROM events WHERE eventId = ${eventId}`, (err, res) => {
+//     if (err) {
+//       console.log("error: ", err);
+//       result(err, null);
+//       return;
+//     }
+//
+//     if (res.length) {
+//       console.log("found event: ", res[0]);
+//       result(null, res[0]);
+//       return;
+//     }
+//
+//     // not found event with the id
+//     result({ kind: "not_found" }, null);
+//   });
+// };
 
 Event.findByName = (eventName, result) => {
   sql.query(`SELECT * FROM events WHERE name = ?`, eventName, (err, res) => {
@@ -73,31 +73,28 @@ Event.getAll = result => {
   });
 };
 
-Event.updateById = (id, event, result) => {
-  sql.query(
-    "UPDATE events SET name = ?, address = ?, date = ? WHERE id = ?",
-    [event.name, event.address, event.date, event.active, id],
-    (err, res) => {
-      if (err) {
-        console.log("error: ", err);
-        result(null, err);
-        return;
-      }
+Event.update = (name, event, result) => {
+    sql.query("UPDATE events SET name = ?, address = ?, date = ? WHERE name = ?",
+            [event.name, event.address, event.date, name], (err, res) => {
+        if (err) {
+            console.log("error: ", err);
+            result(null, err);
+            return;
+        }
 
-      if (res.affectedRows == 0) {
-        // not found event with the id
-        result({ kind: "not_found" }, null);
-        return;
-      }
+        if (res.affectedRows == 0) {
+            // not found event with the id
+            result({ kind: "not_found" }, null);
+            return;
+        }
 
-      console.log("updated event: ", { id: id, ...event });
-      result(null, { id: id, ...event });
-    }
-  );
-};
+        console.log("updated event: ", { name: name, ...event });
+        result(null, { name: name, ...event });
+    });
+    };
 
-Event.remove = (id, result) => {
-  sql.query("DELETE FROM events WHERE id = ?", id, (err, res) => {
+Event.remove = (name, result) => {
+  sql.query("DELETE FROM events WHERE name = ?", name, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(null, err);
@@ -110,7 +107,7 @@ Event.remove = (id, result) => {
       return;
     }
 
-    console.log("deleted events with id: ", id);
+    console.log("deleted events with name: ", name);
     result(null, res);
   });
 };
