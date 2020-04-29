@@ -9,7 +9,7 @@ module.exports = app => {
     app.post("/api/event", event.create);
 
     // Retrieve all event
-    app.get("/api/event", event.findAll);
+    app.get("/api/events", event.findAll);
 
     // // Retrieve a single event with eventId
     // app.get("/api/event/:eventId", event.findOne);
@@ -24,7 +24,7 @@ module.exports = app => {
     app.delete("/api/event/:eventName", event.delete);
 
     // Delete all events
-    app.delete("/api/event", event.deleteAll);
+    app.delete("/api/events", event.deleteAll);
 
 
 
@@ -38,7 +38,7 @@ module.exports = app => {
     app.get("/api/time/event/:eventName", time.getTimes);
 
     // Get the all times for specific event
-    app.get("/api/time", time.getAll);
+    app.get("/api/times", time.getAll);
 
     // Get the times below the value given f
     app.get("/api/time/below/:eventName/:limit", time.getBelow);
@@ -53,7 +53,7 @@ module.exports = app => {
     app.get("/api/time/competitor/:competitorName", time.getCompetitorTimes);
 
     // Delete all times
-    app.delete("/api/time", time.deleteAll);
+    app.delete("/api/times", time.deleteAll);
 
 
 
@@ -63,7 +63,7 @@ module.exports = app => {
     app.post("/api/competitor", competitor.create);
 
     // Retrieve all event
-    app.get("/api/competitor", competitor.findAll);
+    app.get("/api/competitors", competitor.findAll);
 
     // Retrieve a single event with eventName
     app.get("/api/competitor/:competitorName", competitor.findOne);
@@ -75,5 +75,5 @@ module.exports = app => {
     app.delete("/api/competitor/:competitorName", competitor.delete);
 
     // Delete all events
-    app.delete("/api/competitor", competitor.deleteAll);
+    app.delete("/api/competitors", competitor.deleteAll);
 };
