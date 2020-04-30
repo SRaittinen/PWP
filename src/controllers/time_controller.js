@@ -5,7 +5,7 @@ exports.addTime = (req, res) => {
     // Validate request
     if (!req.body) {
       res.status(400).send({
-        message: "Content can not be empty!"
+        message: "Content can't be empty!"
       });
     }
 
@@ -127,6 +127,46 @@ exports.getCompetitorTimes = (req, res) => {
           });
         }
       } else res.send(data);
+    });
+};
+
+//Update time by id
+exports.update = (req, res) => {
+    if (!req.body) {
+        res.status(400).send({
+            message: "Content can't be empty!"
+        });
+    }
+
+    Time.update(req.params.timeId, new Time(req.body), (err, data) => {
+        if (err) {
+            if (err.kind === "not_found") {
+                res.status(404).send({
+                    message: `Not found time with id ${req.params.timeId}.`
+                });
+            } else {
+                res.status(500).send({
+                    message: "Error updating time with id " + req.params.timeId
+                });
+            }
+        } else res.send(data);
+    });
+};
+
+//Delete time by id
+exports.delete = (req, res) => {
+    Time.remove(req.params.timeId, (err, data) => {
+        if (err) {
+        if (err.kind === "not_found") {
+            res.status(404).send({
+              message: `Not found time with id ${req.params.timeId}.`
+            });
+        } else {
+            res.status(500).send({
+              message: "Could not delete time with id " + req.params.timeId
+            });
+          }
+        } else res.send({ message: `Time was deleted successfully!` });
     });
 };
 

@@ -87,11 +87,11 @@ exports.update = (req, res) => {
         if (err) {
           if (err.kind === "not_found") {
             res.status(404).send({
-              message: `Not found Event with id ${req.params.eventName}.`
+              message: `Not found Event with name ${req.params.eventName}.`
             });
           } else {
             res.status(500).send({
-              message: "Error updating Event with id " + req.params.eventName
+              message: "Error updating Event with name " + req.params.eventName
             });
           }
         } else res.send(data);

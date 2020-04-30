@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+// TODO: autofill, updatessa ettei tarvis kaikkia täyttää
+
 const rl = require('readline');
 const chalk = require('chalk')
 const args = process.argv
@@ -17,15 +19,30 @@ const usage = function() {
     client <command>
 
     commands can be:
+    getEvent:                   Get single event info
+    newEvent:                   Create a new event
+    updateEvent:                Update event info
+    deleteEvent:                Delete single event
+    getEvents:                  Get all events
+    deleteEvents:               Delete all events
+    getCompetitor:              Get single competitor info
+    newCompetitor:              Add new competitor
+    updateCompetitor:           Update single competitor
+    deleteCompetitor:           Delete single competitor
+    getCompetitors:             Get all competitors
+    deleteCompetitors:          Delete all competitors
+    newTime:                    Add time
+    updateTime:                 Update single time
+    deleteTime:                 Delete single time
+    getTimes:                   Get all times
+    getEventTimes:              Get all times for one event
+    deleteTimes:                Delete all times
+    getTimesBelow:              Get times below certain value given
+    getTopTimes:                Get top times for one event
+    getCompetitorEventTimes:    Get times for certain competitor on certain event
+    getCompetitorTimes:         Get all times for competitor on all events
+    help:                       Print the usage guide
 
-    new:      used to create a new event
-    get:      used to retrieve your events
-    update:   used to update event info
-    delete:   used to delete event
-    start:    used to start event
-    add:      used to add race time
-    getTimes:  used to get all race times
-    help:     used to print the usage guide
   `
 
   console.log(usageText)
@@ -37,6 +54,7 @@ function errorLog(error) {
   console.log(eLog)
 }
 
+//Prompt info from user
 function prompt(question) {
   const r = rl.createInterface({
     input: process.stdin,
@@ -51,12 +69,27 @@ function prompt(question) {
   })
 }
 
+
+//** API functions **//
+
+//** Event **//
+
+function getEvent() {
+    var q = chalk.blue('Type in event name to get info\n')
+    prompt(q).then(name => {
+        var name = name
+        client.get("http://localhost:3000/api/event/" + name,
+                    function (data, response) {
+            console.log(data);
+        });
+    });
+}
+
 function newEvent() {
   var args = {
     data: { "name": "",
           "address": "",
-          "date": "",
-          "active": true },
+          "date": ""},
     headers: { "Content-Type": "application/json" }
   };
 
@@ -73,8 +106,7 @@ function newEvent() {
         args.data.date = date
 
         //Post request to API
-        client.post("http://localhost:3000/event", args, function (data, response) {
-          // parsed response body as js object
+        client.post("http://localhost:3000/api/event", args, function (data, response) {
           console.log(data);
         });
       })
@@ -83,29 +115,21 @@ function newEvent() {
 
 }
 
-function getEvents() {
-  client.get("http://localhost:3000/event", function (data, response) {
-    // parsed response body as js object
-    console.log(data);
-  });
-}
-
 function updateEvent() {
   var args = {
     data: { "name": "",
           "address": "",
-          "date": "",
-          "active": true },
+          "date": ""},
     headers: { "Content-Type": "application/json" }
   };
 
-  var q = chalk.blue('Type in event id to update\n')
-  prompt(q).then(id => {
-    var id = id
+  var q = chalk.blue('Type in event name to update\n')
+  prompt(q).then(name => {
+    var name = name
 
     q = chalk.blue('Type in new event name\n')
-    prompt(q).then(name => {
-      args.data.name = name
+    prompt(q).then(newName => {
+      args.data.name = newName
 
       q = chalk.blue('Type in new address\n')
       prompt(q).then(address => {
@@ -116,8 +140,8 @@ function updateEvent() {
           args.data.date = date
 
           //Put request to API
-          client.put("http://localhost:3000/event/" + id, args, function (data, response) {
-            // parsed response body as js object
+          client.put("http://localhost:3000/api/event/" + name, args,
+                        function (data, response) {
             console.log(data);
           });
         })
@@ -127,109 +151,389 @@ function updateEvent() {
 }
 
 function deleteEvent() {
-  var q = chalk.blue('Type in event id to delete\n')
-  prompt(q).then(id => {
-    var id = id
-
-    //Delete request to API
-    client.delete("http://localhost:3000/event/" + id, args, function (data, response) {
-      // parsed response body as js object
-      console.log(data);
-    });
-  })
-}
-
-
-function startRace() {
-  var q = chalk.blue('Type in event name to start\n')
+  var q = chalk.blue('Type in event name to delete\n')
   prompt(q).then(name => {
     var name = name
-    client.get("http://localhost:3000/event/" + name + "/start", function (data, response) {
-      // parsed response body as js object
+
+    //Delete request to API
+    client.delete("http://localhost:3000/api/event/" + name, args,
+                    function (data, response) {
       console.log(data);
     });
   })
 }
 
-function addTime() {
+function getEvents() {
+    client.get("http://localhost:3000/api/events", function (data, response) {
+        console.log(data);
+    });
+}
+
+function deleteEvents() {
+    client.delete("http://localhost:3000/api/events", function (data, response) {
+        console.log(data);
+    });
+}
+
+//** Competitor **//
+
+function getCompetitor() {
+    var q = chalk.blue('Type in competitor name to get info\n')
+    prompt(q).then(name => {
+        var name = name
+        client.get("http://localhost:3000/api/competitor/" + name,
+                    function (data, response) {
+            console.log(data);
+        });
+    });
+}
+
+function newCompetitor() {
   var args = {
-    data: { "competitor": "",
-          "age": "",
-          "time": "" },
+    data: { "name": "",
+            "age": 0},
     headers: { "Content-Type": "application/json" }
   };
 
-  var q = chalk.blue('Type in event name to add time to\n')
+  var q = chalk.blue('Type in competitor name\n')
+  prompt(q).then(name => {
+    args.data.name = name
+
+    q = chalk.blue('Type in competitor age\n')
+    prompt(q).then(age => {
+      args.data.age = age
+        //Post request to API
+        client.post("http://localhost:3000/api/competitor", args,
+                    function (data, response) {
+          console.log(data);
+        });
+    })
+  })
+}
+
+function updateCompetitor() {
+    var args = {
+      data: { "name": "",
+              "age": 0},
+      headers: { "Content-Type": "application/json" }
+    };
+
+  var q = chalk.blue('Type in competitor name to update\n')
   prompt(q).then(name => {
     var name = name
 
-    q = chalk.blue('Type in competitor\n')
-    prompt(q).then(competitor => {
-      args.data.competitor = competitor
+    q = chalk.blue('Type in new competitor name\n')
+    prompt(q).then(newName => {
+      args.data.name = newName
 
-      q = chalk.blue('Type in competitor age\n')
+      q = chalk.blue('Type in new competitor age\n')
       prompt(q).then(age => {
         args.data.age = age
 
-        q = chalk.blue('Type in race time\n')
-        prompt(q).then(time => {
-          args.data.time = time
-
           //Put request to API
-          client.post("http://localhost:3000/event/" + name + "/addTime", args, function (data, response) {
-            // parsed response body as js object
+          client.put("http://localhost:3000/api/competitor/" + name, args,
+                        function (data, response) {
             console.log(data);
           });
-        })
       })
     })
   })
 }
 
-function getRaceTimes() {
-  var q = chalk.blue('Type in event name to get times\n')
+function deleteCompetitor() {
+  var q = chalk.blue('Type in competitor name to delete\n')
   prompt(q).then(name => {
     var name = name
-    client.get("http://localhost:3000/event/" + name + "/getTimes", function (data, response) {
-      // parsed response body as js object
+
+    //Delete request to API
+    client.delete("http://localhost:3000/api/competitor/" + name, args,
+                    function (data, response) {
       console.log(data);
     });
   })
 }
 
+function getCompetitors() {
+    client.get("http://localhost:3000/api/competitors", function (data, response) {
+        console.log(data);
+    });
+}
+
+function deleteCompetitors() {
+    client.delete("http://localhost:3000/api/competitors", function (data, response) {
+        console.log(data);
+    });
+}
+
+
+//** Time **//
+
+function newTime() {
+  var args = {
+    data: { "time": 0.0,
+            "eventName": "",
+            "competitorName": ""},
+    headers: { "Content-Type": "application/json" }
+  };
+
+  var q = chalk.blue('Type in time\n')
+  prompt(q).then(time => {
+    args.data.time = time
+
+    q = chalk.blue('Type in event name\n')
+    prompt(q).then(eventName => {
+      args.data.eventName = eventName
+
+      q = chalk.blue('Type in competitor name\n')
+      prompt(q).then(competitorName => {
+        args.data.competitorName = competitorName
+
+        //Post request to API
+        client.post("http://localhost:3000/api/time", args, function (data, response) {
+          console.log(data);
+        });
+      })
+    })
+  })
+
+}
+
+function updateTime() {
+    var args = {
+      data: { "time": 0.0,
+              "eventName": "",
+              "competitorName": ""},
+      headers: { "Content-Type": "application/json" }
+    };
+
+    var q = chalk.blue('Type in time id to update\n')
+    prompt(q).then(id => {
+      var id = id
+
+      var q = chalk.blue('Type in new time\n')
+      prompt(q).then(time => {
+        args.data.time = time
+
+        q = chalk.blue('Type in new event name\n')
+        prompt(q).then(eventName => {
+          args.data.eventName = eventName
+
+          q = chalk.blue('Type in new competitor name\n')
+          prompt(q).then(competitorName => {
+            args.data.competitorName = competitorName
+
+            //Put request to API
+            client.put("http://localhost:3000/api/time/" + id, args,
+                          function (data, response) {
+              console.log(data);
+            });
+          })
+        })
+      })
+    })
+}
+
+function deleteTime() {
+  var q = chalk.blue('Type in time id to delete\n')
+  prompt(q).then(id => {
+    var id = id
+
+    //Delete request to API
+    client.delete("http://localhost:3000/api/time/" + id, args,
+                    function (data, response) {
+      console.log(data);
+    });
+  })
+}
+
+function getTimes() {
+    client.get("http://localhost:3000/api/times", function (data, response) {
+        console.log(data);
+    });
+}
+
+function getEventTimes() {
+    var q = chalk.blue('Type in event name to get times for\n')
+    prompt(q).then(name => {
+        var name = name
+        client.get("http://localhost:3000/api/times/event/" + name,
+                    function (data, response) {
+            console.log(data);
+        });
+    });
+}
+
+function deleteTimes() {
+    client.delete("http://localhost:3000/api/times", function (data, response) {
+        console.log(data);
+    });
+}
+
+
+function getTimesBelow() {
+    var q = chalk.blue('Type in event name to get times\n')
+    prompt(q).then(name => {
+        var name = name
+
+        q = chalk.blue('Type in limit below which times are get\n')
+        prompt(q).then(limit => {
+            var limit = limit
+            //Post request to API
+            client.get("http://localhost:3000/api/times/below/" + name + "/" + limit,
+                        args, function (data, response) {
+                console.log(data);
+            });
+        })
+    })
+}
+
+function getTopTimes() {
+    var q = chalk.blue('Type in event name to get top times\n')
+    prompt(q).then(name => {
+        var name = name
+
+        q = chalk.blue('Type in how many top times to get\n')
+        prompt(q).then(amount => {
+            var amount = amount
+            //Post request to API
+            client.get("http://localhost:3000/api/times/top/" + name + "/" + amount,
+                        args, function (data, response) {
+                console.log(data);
+            });
+        })
+    })
+}
+
+function getCompetitorEventTimes() {
+    var q = chalk.blue('Type in event name to get times\n')
+    prompt(q).then(eventName => {
+        var eventName = eventName
+
+        q = chalk.blue('Type in competitor name\n')
+        prompt(q).then(competitorName => {
+            var competitorName = competitorName
+            //Post request to API
+            client.get("http://localhost:3000/api/time/competitor/event/" +
+                        eventName + "/" + competitorName,
+                        args, function (data, response) {
+                console.log(data);
+            });
+        })
+    })
+}
+
+function getCompetitorTimes() {
+    var q = chalk.blue('Type in competitor name to get times for\n')
+    prompt(q).then(name => {
+        var name = name
+        client.get("http://localhost:3000/api/times/competitor/" + name,
+                    function (data, response) {
+            console.log(data);
+        });
+    });
+}
+
+
+
 
 // we make sure the length of the arguments is exactly three
 if (args.length > 3) {
-  errorLog(`only one argument can be accepted`)
-  usage()
+    errorLog(`only one argument can be accepted`)
+    usage()
 }
 
 switch(args[2]) {
-  case 'help':
-    usage()
-    break
-  case 'new':
-    newEvent()
-    break
-  case 'get':
-    getEvents()
-    break
-  case 'update':
-    updateEvent();
-    break
-  case 'delete':
-    deleteEvent();
-    break
-  case 'start':
-    startRace();
-    break
-  case 'add':
-    addTime();
-    break
-  case 'getTimes':
-    getRaceTimes();
-    break
-  default:
-    errorLog('invalid command passed')
-    usage()
+    case 'help':
+        usage()
+        break
+
+    //** event **//
+    case 'getEvent':
+        getEvent()
+        break
+    case 'newEvent':
+        newEvent()
+        break
+    case 'updateEvent':
+        updateEvent();
+        break
+    case 'deleteEvent':
+        deleteEvent();
+        break
+
+    //** events **//
+    case 'getEvents':
+        getEvents()
+        break
+    case 'deleteEvents':
+        deleteEvents();
+        break
+
+    //** competitor **//
+    case 'getCompetitor':
+        getCompetitor()
+        break
+    case 'newCompetitor':
+        newCompetitor()
+        break
+    case 'updateCompetitor':
+        updateCompetitor();
+        break
+    case 'deleteCompetitor':
+        deleteCompetitor();
+        break
+
+    //** competitors **//
+    case 'getCompetitors':
+        getCompetitors()
+        break
+    case 'deleteCompetitors':
+        deleteCompetitors();
+        break
+
+    //** time **//
+    case 'newTime':
+        newTime()
+        break
+    case 'updateTime':
+        updateTime();
+        break
+    case 'deleteTime':
+        deleteTime();
+        break
+
+    //** times **//
+    case 'getTimes':
+        getTimes();
+        break
+    case 'getEventTimes':
+        getEventTimes();
+        break
+    case 'deleteTimes':
+        deleteTimes();
+        break
+
+    //** times below **//
+    case 'getTimesBelow':
+        getTimesBelow();
+        break
+
+    //** top times **//
+    case 'getTopTimes':
+        getTopTimes();
+        break
+
+    //** competitor times for event **//
+    case 'getCompetitorEventTimes':
+        getCompetitorEventTimes();
+        break
+
+    //** competitor times **//
+    case 'getCompetitorTimes':
+        getCompetitorTimes();
+        break
+
+    default:
+        errorLog('invalid command passed')
+        usage()
 }

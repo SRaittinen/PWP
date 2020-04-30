@@ -56,7 +56,7 @@ Time.getAll = result => {
 
 
 Time.getBelow = (eventName, limit, result) => {
-  sql.query(`SELECT * FROM times WHERE eventName = ? AND time <= ? ORDER BY time DESC`,
+  sql.query(`SELECT * FROM times WHERE eventName = ? AND time <= ? ORDER BY time ASC`,
       [eventName, limit], (err, res) => {
     if (err) {
       console.log("error: ", err);
@@ -133,6 +133,48 @@ Time.getCompetitorTimes = (competitorName, result) => {
 
     // not found time with the id
     result({ kind: "not_found" }, null);
+  });
+};
+
+
+Time.update = (id, time, result) => {
+  sql.query(
+    "UPDATE times SET time = ?, eventName = ?, competitorName = ? WHERE timeId = ?",
+    [time.time, time.eventName, time.competitorName, id], (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        result(null, err);
+        return;
+      }
+
+      if (res.affectedRows == 0) {
+        // not found time with the id
+        result({ kind: "not_found" }, null);
+        return;
+      }
+
+      console.log("updated time: ", { id: id, ...time });
+      result(null, { id: id, ...time });
+    }
+  );
+};
+
+Time.remove = (id, result) => {
+  sql.query("DELETE FROM times WHERE timeId = ?", id, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    }
+
+    if (res.affectedRows == 0) {
+      // not found time with the id
+      result({ kind: "not_found" }, null);
+      return;
+    }
+
+    console.log("deleted time with id: ", id);
+    result(null, res);
   });
 };
 
