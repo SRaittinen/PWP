@@ -1,4 +1,4 @@
-const Competitor = require("../models/competitor_model.js");
+const Competitor = require("../models/competitorModel.js");
 
 // Create and Save a new competitor
 exports.create = (req, res) => {

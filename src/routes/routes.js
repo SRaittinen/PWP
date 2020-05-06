@@ -1,7 +1,7 @@
 module.exports = app => {
-    const event = require("../controllers/event_controller.js");
-    const time = require("../controllers/time_controller.js");
-    const competitor = require("../controllers/competitor_controller.js");
+    const event = require("../controllers/eventController.js");
+    const time = require("../controllers/timeController.js");
+    const competitor = require("../controllers/competitorController.js");
 
     //**    EVENTS       **//
 
@@ -52,14 +52,14 @@ module.exports = app => {
 
 
     //**    TIMES       **//
-    
+
     // Add time to table
     app.post("/api/time", time.addTime);
 
     // Get the all times for specific event
     app.get("/api/times/event/:eventName", time.getTimes);
 
-    // Get the all times for specific event
+    // Get the all times event
     app.get("/api/times", time.getAll);
 
     // Get the times below the value given

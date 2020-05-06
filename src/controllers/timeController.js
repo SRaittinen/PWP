@@ -1,4 +1,4 @@
-const Time = require("../models/time_model.js");
+const Time = require("../models/timeModel.js");
 
 // Create and Save a new competitor
 exports.addTime = (req, res) => {

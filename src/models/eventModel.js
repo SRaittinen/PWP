@@ -22,25 +22,26 @@ Event.create = (newEvent, result) => {
   });
 };
 
-// Event.findById = (eventId, result) => {
-//   sql.query(`SELECT * FROM events WHERE eventId = ${eventId}`, (err, res) => {
-//     if (err) {
-//       console.log("error: ", err);
-//       result(err, null);
-//       return;
-//     }
-//
-//     if (res.length) {
-//       console.log("found event: ", res[0]);
-//       result(null, res[0]);
-//       return;
-//     }
-//
-//     // not found event with the id
-//     result({ kind: "not_found" }, null);
-//   });
-// };
+Event.findById = (eventId, result) => {
+  sql.query(`SELECT * FROM events WHERE eventId = ${eventId}`, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
 
+    if (res.length) {
+      console.log("found event: ", res[0]);
+      result(null, res[0]);
+      return;
+    }
+
+    // not found event with the id
+    result({ kind: "not_found" }, null);
+  });
+};
+
+// TODO: poistetaan?
 Event.findByName = (eventName, result) => {
   sql.query(`SELECT * FROM events WHERE name = ?`, eventName, (err, res) => {
     if (err) {

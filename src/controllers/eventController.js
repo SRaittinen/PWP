@@ -1,4 +1,4 @@
-const Event = require("../models/event_model.js");
+const Event = require("../models/eventModel.js");
 
 // Create and Save a new Event
 exports.create = (req, res) => {
@@ -36,28 +36,28 @@ exports.findAll = (req, res) => {
           message:
             err.message || "Some error occurred while retrieving events."
         });
-      else res.send(data);
+      else res.send(JSON.stringify(data));
     });
 };
 
-// // Find a single Event with a eventId
-// exports.findOne = (req, res) => {
-//     Event.findById(req.params.eventId, (err, data) => {
-//       if (err) {
-//         if (err.kind === "not_found") {
-//           res.status(404).send({
-//             message: `Not found Event with id ${req.params.eventId}.`
-//           });
-//         } else {
-//           res.status(500).send({
-//             message: "Error retrieving Event with id " + req.params.eventId
-//           });
-//         }
-//       } else res.send(data);
-//     });
-// };
+// Find a single Event with a eventId
+exports.findOne = (req, res) => {
+    Event.findById(req.params.eventId, (err, data) => {
+      if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message: `Not found Event with id ${req.params.eventId}.`
+          });
+        } else {
+          res.status(500).send({
+            message: "Error retrieving Event with id " + req.params.eventId
+          });
+        }
+      } else res.send(data);
+    });
+};
 
-// Find a single Event with a eventName
+// Find a single Event with a eventName // TODO: poistetaan?
 exports.findOneName = (req, res) => {
     Event.findByName(req.params.eventName, (err, data) => {
       if (err) {
