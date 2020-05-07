@@ -38,7 +38,7 @@ afterEach(function(done){
     done();
 });
 
-// TODO: posteihin jos väärä runko, asdasdit muuttujiin
+// TODO:  asdasdit muuttujiin
 //** EVENTS **//
 
 describe("Events", () => {

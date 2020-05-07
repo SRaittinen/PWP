@@ -26,7 +26,7 @@ nodeJS
 
 ### Installing
 
-A step by step instructions for installing required dependecies, tools and software.
+A step by step instructions for installing required dependencies, tools and software. Instructions written and tested to work on Ubuntu 18.04.
 
 Install nodeJS and npm with following these steps
 ```

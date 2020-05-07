@@ -43,6 +43,8 @@ const usage = function() {
     getCompetitorTimes:         Get all times for competitor on all events
     help:                       Print the usage guide
 
+    quote:                      Get quote of the day
+
   `
 
   console.log(usageText)
@@ -433,7 +435,12 @@ function getCompetitorTimes() {
     });
 }
 
-
+function getQuote() {
+    var name = name
+    client.get("https://quotes.rest/qod", function (data, response) {
+        console.log("Quote of the day:" + data.contents.quotes[0].quote);
+    });
+}
 
 
 // we make sure the length of the arguments is exactly three
@@ -531,6 +538,11 @@ switch(args[2]) {
     //** competitor times **//
     case 'getCompetitorTimes':
         getCompetitorTimes();
+        break
+
+    //** quote of the day **//
+    case 'quote':
+        getQuote();
         break
 
     default:
