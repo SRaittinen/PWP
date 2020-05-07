@@ -61,15 +61,23 @@
 *ONLY USED BY COURSE STAFF: Additional comments from the course staff*
 
 ## Midterm meeting
-* **DATE:**
-* **ASSISTANTS:**
+* **DATE:** 08.04.202
+* **ASSISTANTS:** Iván Sánchez Milara
 * **GRADE:** *To be filled by course staff*
 
 ### Minutes
 *Summary of what was discussed during the meeting*
+* Project state
+* Implementation state
+* Database implementation
+* API implementaton
+* Client implementation
+* API and client demo.
 
 ### Action points
-*List here the actions points discussed with assistants*
+* Implementing foreign keys to the database to make it more efficient
+* Modify database to make more sense
+* Continue API design
 
 
 ### Comments from staff
