@@ -1,10 +1,9 @@
 #!/usr/bin/env node
 
-// TODO: autofill, updatessa ettei tarvis kaikkia täyttää
-
 const rl = require('readline');
 const chalk = require('chalk')
 const args = process.argv
+
 
 var Client = require('node-rest-client').Client;
 
