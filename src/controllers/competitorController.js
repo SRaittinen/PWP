@@ -40,21 +40,21 @@ exports.findAll = (req, res) => {
 };
 
 // Find a single Event with a competitorId
-// exports.findOne = (req, res) => {
-//     Competitor.findById(req.params.competitorId, (err, data) => {
-//       if (err) {
-//         if (err.kind === "not_found") {
-//           res.status(404).send({
-//             message: `Not found Event with id ${req.params.competitorId}.`
-//           });
-//         } else {
-//           res.status(500).send({
-//             message: "Error retrieving Event with id " + req.params.competitorId
-//           });
-//         }
-//       } else res.send(data);
-//     });
-// };
+exports.findOne = (req, res) => {
+    Competitor.findById(req.params.competitorId, (err, data) => {
+      if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message: `Not found Event with id ${req.params.competitorId}.`
+          });
+        } else {
+          res.status(500).send({
+            message: "Error retrieving Event with id " + req.params.competitorId
+          });
+        }
+      } else res.send(data);
+    });
+};
 
 // Find a single competitor with a competitorName
 exports.findOne = (req, res) => {

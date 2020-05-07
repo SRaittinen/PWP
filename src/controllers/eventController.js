@@ -59,7 +59,7 @@ exports.findOne = (req, res) => {
     });
 };
 
-// Find a single Event with a eventName // TODO: poistetaan?
+// Find a single Event with a eventName 
 exports.findOneName = (req, res) => {
     Event.findByName(req.params.eventName, (err, data) => {
       if (err) {
