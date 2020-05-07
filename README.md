@@ -26,7 +26,7 @@ nodeJS
 
 ### Installing
 
-A step by step series of examples that tell you how to get a development env running
+A step by step instructions for installing required dependecies, tools and software.
 
 Install nodeJS and npm with following these steps
 ```
@@ -63,7 +63,7 @@ git clone https://github.com/SRaittinen/PWP
 cd PWP
 ```
 
-Then run the following script to set up the project
+Then run the following script to set up the project. This will create the database.
 ```
 ./setup_project.sh
 ```
@@ -81,5 +81,23 @@ The integration tests of the system can be ran with the script mentioned below
 The script performs testing for database and the API itself
 
 ```
-run_tests.sh
+./run_tests.sh
 ```
+
+## Deployment
+
+To start the API run the following startup script
+```
+cd src
+npm run dev
+```
+The server is now running and can be reached with HTTP request.
+
+The API can be used with the provided client application.
+The client can be used with the following command
+```
+cd client
+./client -help
+```
+The client will provide help on how to run available commands.
+The commands can then be used to communicate with the API.
