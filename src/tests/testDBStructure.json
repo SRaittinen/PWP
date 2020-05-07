@@ -1,48 +1,48 @@
 {
     "event1": {
-        "id": 1,
-        "name": "paska",
+        "name": "event1",
         "address": "test address 1",
         "date": "2020-01-01" },
     "event2": {
-        "id": 2,
         "name": "event2",
         "address": "test address 2",
         "date": "2020-02-02" },
     "event3": {
-        "id": 3,
         "name": "event3",
         "address": "test address 3",
         "date": "2020-03-03" },
+    "newEvent": {
+        "name": "newEvent",
+        "address": "new address ",
+        "date": "2020-03-03" },
 
     "competitor1": {
-            "id": 1,
-            "name": "test1",
-            "age": 1 },
+        "name": "competitor1",
+        "age": 1 },
     "competitor2": {
-        "id": 2,
-        "name": "test2",
-        "address": 2 },
+        "name": "competitor2",
+        "age": 2 },
     "competitor3": {
-        "id": 3,
-        "name": "test3",
-        "address": 3 },
-
+        "name": "competitor3",
+        "age": 3 },
+    "newCompetitor": {
+        "name": "newCompetitor",
+        "age": 4 },
     "time1": {
-            "id": 1,
-            "time": 11.11,
-            "eventName": "event1",
-            "competitorName": "test3" },
+        "time": 11.11,
+        "eventName": "event1",
+        "competitorName": "competitor3" },
     "time2": {
-        "id": 2,
         "time": 22.22,
         "eventName": "event2",
-        "competitorName": "test2" },
+        "competitorName": "competitor2" },
     "time3": {
-        "id": 3,
         "time": 33.33,
         "eventName": "event3",
+        "competitorName": "competitor1" },
+    "newTime": {
+        "time": 44.44,
+        "eventName": "event3",
         "competitorName": "test1" }
-
 
 }

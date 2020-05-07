@@ -17,8 +17,8 @@ Event.create = (newEvent, result) => {
     }
 
 
-    console.log("created event: ", { id: res.insertId, ...newEvent });
-    result(null, { id: res.insertId, ...newEvent });
+    console.log("created event: ", { eventId: res.insertId, ...newEvent });
+    result(null, { eventId: res.insertId, ...newEvent });
   });
 };
 
@@ -41,7 +41,6 @@ Event.findById = (eventId, result) => {
   });
 };
 
-// TODO: poistetaan?
 Event.findByName = (eventName, result) => {
   sql.query(`SELECT * FROM events WHERE name = ?`, eventName, (err, res) => {
     if (err) {
@@ -51,8 +50,8 @@ Event.findByName = (eventName, result) => {
     }
 
     if (res.length) {
-      console.log("found event: ", res[0]);
-      result(null, res[0]);
+      console.log("found event: ", JSON.parse(JSON.stringify(res[0])));
+      result(null, JSON.parse(JSON.stringify(res[0])));
       return;
     }
 
@@ -65,12 +64,12 @@ Event.getAll = result => {
   sql.query("SELECT * FROM events", (err, res) => {
     if (err) {
       console.log("error: ", err);
-      result(null, err);
+      result(err, null);
       return;
     }
 
-    console.log("events: ", res);
-    result(null, res);
+    console.log("events: ", JSON.parse(JSON.stringify(res)));
+    result(null, JSON.parse(JSON.stringify(res)));
   });
 };
 
@@ -79,7 +78,7 @@ Event.update = (name, event, result) => {
             [event.name, event.address, event.date, name], (err, res) => {
         if (err) {
             console.log("error: ", err);
-            result(null, err);
+            result(err, null);
             return;
         }
 
@@ -98,7 +97,7 @@ Event.remove = (name, result) => {
   sql.query("DELETE FROM events WHERE name = ?", name, (err, res) => {
     if (err) {
       console.log("error: ", err);
-      result(null, err);
+      result(err, null);
       return;
     }
 
@@ -117,7 +116,7 @@ Event.removeAll = result => {
   sql.query("DELETE FROM events", (err, res) => {
     if (err) {
       console.log("error: ", err);
-      result(null, err);
+      result(err, null);
       return;
     }
 

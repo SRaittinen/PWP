@@ -3,13 +3,13 @@ CREATE TABLE events(
     name varchar(100) NOT NULL UNIQUE,
     address varchar(100) NOT NULL,
     date DATE NOT NULL
-);
+) ENGINE=InnoDB CHARACTER SET utf8;
 
 CREATE TABLE competitors(
     competitorId INT AUTO_INCREMENT PRIMARY KEY,
     name varchar(100) NOT NULL UNIQUE,
     age INT NOT NULL
-);
+) ENGINE=InnoDB CHARACTER SET utf8;
 
 CREATE TABLE times(
     timeId INT AUTO_INCREMENT PRIMARY KEY,
@@ -26,4 +26,4 @@ CREATE TABLE times(
     REFERENCES competitors(name)
         ON UPDATE CASCADE
         ON DELETE CASCADE
-);
+) ENGINE=InnoDB CHARACTER SET utf8;

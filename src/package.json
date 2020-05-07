@@ -4,7 +4,8 @@
   "description": "Course work for PWP course",
   "main": "server.js",
   "scripts": {
-    "test": "mocha tests/*.js --exit"
+    "test": "NODE_ENV=test mocha tests/*.js --exit",
+    "dev": "NODE_ENV=development nodemon server.json"
   },
   "keywords": [
     "nodejs",
@@ -19,6 +20,7 @@
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
     "express": "^4.17.1",
+    "log-suppress": "^1.0.3",
     "mocha": "^7.1.2",
     "mysql": "^2.18.1"
   }

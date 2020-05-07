@@ -101,7 +101,7 @@ function newEvent() {
     prompt(q).then(address => {
       args.data.address = address
 
-      q = chalk.blue('Type in date (yyyy-dd-mm)\n')
+      q = chalk.blue('Type in date (yyyy-mm-dd)\n')
       prompt(q).then(date => {
         args.data.date = date
 

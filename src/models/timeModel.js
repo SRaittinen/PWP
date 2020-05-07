@@ -17,8 +17,8 @@ Time.create = (newTime, result) => {
     }
 
 
-    console.log("created time: ", { id: res.insertId, ...newTime });
-    result(null, { id: res.insertId, ...newTime });
+    console.log("created time: ", { timeId: res.insertId, ...newTime });
+    result(null, { timeId: res.insertId, ...newTime });
   });
 };
 
@@ -45,7 +45,7 @@ Time.getAll = result => {
   sql.query("SELECT * FROM times", (err, res) => {
     if (err) {
       console.log("error: ", err);
-      result(null, err);
+      result(err, null);
       return;
     }
 
@@ -143,7 +143,7 @@ Time.update = (id, time, result) => {
     [time.time, time.eventName, time.competitorName, id], (err, res) => {
       if (err) {
         console.log("error: ", err);
-        result(null, err);
+        result(err, null);
         return;
       }
 
@@ -153,8 +153,8 @@ Time.update = (id, time, result) => {
         return;
       }
 
-      console.log("updated time: ", { id: id, ...time });
-      result(null, { id: id, ...time });
+      console.log("updated time: ", { timeId: id, ...time });
+      result(null, { timeId: id, ...time });
     }
   );
 };
@@ -163,7 +163,7 @@ Time.remove = (id, result) => {
   sql.query("DELETE FROM times WHERE timeId = ?", id, (err, res) => {
     if (err) {
       console.log("error: ", err);
-      result(null, err);
+      result(err, null);
       return;
     }
 
@@ -182,7 +182,7 @@ Time.removeAll = result => {
   sql.query("DELETE FROM times", (err, res) => {
     if (err) {
       console.log("error: ", err);
-      result(null, err);
+      result(err, null);
       return;
     }
 

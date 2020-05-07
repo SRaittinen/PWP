@@ -16,8 +16,8 @@ Competitor.create = (newCompetitor, result) => {
     }
 
 
-    console.log("created competitor: ", { id: res.insertId, ...newCompetitor });
-    result(null, { id: res.insertId, ...newCompetitor });
+    console.log("created competitor: ", { competitorId: res.insertId, ...newCompetitor });
+    result(null, { competitorId: res.insertId, ...newCompetitor });
   });
 };
 
@@ -63,7 +63,7 @@ Competitor.getAll = result => {
   sql.query("SELECT * FROM competitors", (err, res) => {
     if (err) {
       console.log("error: ", err);
-      result(null, err);
+      result(err, null);
       return;
     }
 
@@ -78,7 +78,7 @@ Competitor.updateById = (name, competitor, result) => {
     (err, res) => {
       if (err) {
         console.log("error: ", err);
-        result(null, err);
+        result(err, null);
         return;
       }
 
@@ -98,7 +98,7 @@ Competitor.remove = (name, result) => {
   sql.query("DELETE FROM competitors WHERE name = ?", name, (err, res) => {
     if (err) {
       console.log("error: ", err);
-      result(null, err);
+      result(err, null);
       return;
     }
 
@@ -117,7 +117,7 @@ Competitor.removeAll = result => {
   sql.query("DELETE FROM competitors", (err, res) => {
     if (err) {
       console.log("error: ", err);
-      result(null, err);
+      result(err, null);
       return;
     }
 

@@ -1,17 +1,12 @@
 #!/bin/bash
+export MYSQL_PWD=password
 
 #Create testDB and tables
-( cd ../db && ./create_DB.sh testDB )
-
-#Replace dbconfig file for testDB
-mv ../config/dbConfig.js .
-cp testDbConfig.js ../config/dbConfig.js
+( cd ../../db && ./create_DB.sh testDB )
 
 #Run tests
 npm run test
 
-#Replace dbconfig file back to original
-mv dbConfig.js ../config
-
 #Remove test database
-mysql -u root -ppassword -e "DROP DATABASE testDB;"
+mysql -u root -e "DROP DATABASE testDB;"
+echo "Database removed"

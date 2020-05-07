@@ -36,7 +36,9 @@ exports.findAll = (req, res) => {
           message:
             err.message || "Some error occurred while retrieving events."
         });
-      else res.send(JSON.stringify(data));
+      else {
+          res.send(data);
+      }
     });
 };
 

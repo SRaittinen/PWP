@@ -1,22 +1,21 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const config = require("./config/config.js");
 
 const app = express();
+
+//Dont print out console log on tests
+require("log-suppress").init(console, 'test');
 
 // Configure app to user bodyParser
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// simple route TODO
-// app.get("/", (req, res) => {
-//   res.json({ message: "Welcome to PWP application." });
-// });
-
 require("./routes/routes.js")(app);
 
 // set port, listen for requests
-app.listen(3000, () => {
-  console.log("Server is running on port 3000.");
+app.listen(config.port[process.env.NODE_ENV], () => {
+  console.log("Server is running on port " + config.port[process.env.NODE_ENV]);
 });
 
 // Export app for testing
