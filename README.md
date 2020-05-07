@@ -66,7 +66,8 @@ npm run dev
 The integration tests of the system can be ran with the script found in src/tests folder.
 
 ```
-src/tests/run_tests.sh
+cd src/tests
+run_tests.sh
 ```
 
 ### Break down into end to end tests
